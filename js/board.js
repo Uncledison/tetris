@@ -67,41 +67,198 @@ function checkLines() {
 
 // 줄 제거 애니메이션
 function animateLinesClear(lines) {
-    // 화면 흔들림 효과
+    const linesCount = lines.length;
+    
+    // 진동 강도
     if (navigator.vibrate) {
-        navigator.vibrate(100);
+        if (linesCount === 4) {
+            navigator.vibrate([50, 30, 50, 30, 100]); // 테트리스: 강력한 진동
+        } else if (linesCount >= 3) {
+            navigator.vibrate([50, 20, 80]); // 트리플
+        } else if (linesCount === 2) {
+            navigator.vibrate([40, 20, 60]); // 더블
+        } else {
+            navigator.vibrate(50); // 싱글
+        }
     }
     
-    // 라인 플래시 효과
+    // 화면 흔들림 효과
+    if (linesCount >= 3) {
+        shakeScreen(linesCount === 4 ? 10 : 6);
+    }
+    
+    // 1단계: 라인 밝게 빛나기 (50ms)
     lines.forEach(row => {
         for (let col = 0; col < COLS; col++) {
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = linesCount === 4 ? '#ffffff' : '#ffff00';
             ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            
+            // 외곽 글로우
+            ctx.shadowColor = linesCount === 4 ? '#00ffff' : '#ffaa00';
+            ctx.shadowBlur = 20;
+            ctx.strokeStyle = ctx.shadowColor;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            ctx.shadowBlur = 0;
         }
     });
     
-    // 파티클 효과
-    createParticles(lines);
+    // 2단계: 크랙 효과 (100ms 후)
+    setTimeout(() => {
+        lines.forEach(row => {
+            // 가운데부터 양쪽으로 크랙
+            for (let col = 0; col < COLS; col++) {
+                const distance = Math.abs(col - COLS/2);
+                setTimeout(() => {
+                    ctx.fillStyle = 'rgba(255, 100, 0, 0.8)';
+                    ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                }, distance * 10);
+            }
+        });
+    }, 50);
+    
+    // 3단계: 폭발 파티클 (150ms 후)
+    setTimeout(() => {
+        createExplosionParticles(lines, linesCount);
+    }, 100);
+    
+    // 테트리스 전용 효과
+    if (linesCount === 4) {
+        createLightningEffect();
+        createShockwave();
+    }
 }
 
-// 파티클 생성
-function createParticles(lines) {
+// 화면 흔들림
+function shakeScreen(intensity) {
+    const gameContainer = document.querySelector('.game-container');
+    let shakeCount = 0;
+    const shakeInterval = setInterval(() => {
+        if (shakeCount >= 6) {
+            clearInterval(shakeInterval);
+            gameContainer.style.transform = 'translate(0, 0)';
+            return;
+        }
+        const x = (Math.random() - 0.5) * intensity;
+        const y = (Math.random() - 0.5) * intensity;
+        gameContainer.style.transform = `translate(${x}px, ${y}px)`;
+        shakeCount++;
+    }, 50);
+}
+
+// 강화된 파티클 생성
+function createExplosionParticles(lines, linesCount) {
+    const particleCount = linesCount === 4 ? 50 : linesCount * 15;
+    const colors = linesCount === 4 
+        ? ['#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#ff00ff'] // 무지개
+        : linesCount >= 3
+        ? ['#ff00ff', '#ff0099', '#ff00cc'] // 핑크
+        : linesCount === 2
+        ? ['#ff7700', '#ff0000'] // 주황/빨강
+        : ['#ffff00', '#ffaa00']; // 노랑
+    
     lines.forEach(row => {
-        for (let col = 0; col < COLS; col++) {
-            // 각 블록에서 작은 파티클 생성
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const x = col * BLOCK_SIZE + Math.random() * BLOCK_SIZE;
-                    const y = row * BLOCK_SIZE + Math.random() * BLOCK_SIZE;
-                    
-                    ctx.fillStyle = `rgba(255, ${Math.random() * 255}, 0, ${0.8 - i * 0.2})`;
-                    ctx.beginPath();
-                    ctx.arc(x, y, 3 - i, 0, Math.PI * 2);
-                    ctx.fill();
-                }, i * 50);
-            }
+        for (let i = 0; i < particleCount / lines.length; i++) {
+            const col = Math.random() * COLS;
+            const x = col * BLOCK_SIZE;
+            const y = row * BLOCK_SIZE;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2 + Math.random() * 4;
+            const size = 2 + Math.random() * 4;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            animateParticle(x, y, angle, speed, size, color);
         }
     });
+}
+
+// 개별 파티클 애니메이션
+function animateParticle(startX, startY, angle, speed, size, color) {
+    let x = startX;
+    let y = startY;
+    let life = 1.0;
+    let frame = 0;
+    
+    const animate = () => {
+        if (life <= 0 || frame > 30) return;
+        
+        x += Math.cos(angle) * speed;
+        y += Math.sin(angle) * speed;
+        life -= 0.05;
+        frame++;
+        
+        ctx.save();
+        ctx.globalAlpha = life;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, size * life, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        
+        requestAnimationFrame(animate);
+    };
+    
+    animate();
+}
+
+// 번개 효과 (테트리스 전용)
+function createLightningEffect() {
+    const canvas = document.getElementById('gameCanvas');
+    const rect = canvas.getBoundingClientRect();
+    
+    // 테두리 번쩍임
+    canvas.style.boxShadow = '0 0 50px #00ffff, 0 0 100px #00ffff';
+    setTimeout(() => {
+        canvas.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)';
+    }, 200);
+    
+    // 번개 선 그리기
+    ctx.save();
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 3;
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 20;
+    
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * canvas.width, 0);
+            const segments = 5;
+            for (let s = 0; s < segments; s++) {
+                ctx.lineTo(
+                    Math.random() * canvas.width,
+                    (canvas.height / segments) * (s + 1)
+                );
+            }
+            ctx.stroke();
+        }, i * 50);
+    }
+    
+    ctx.restore();
+}
+
+// 충격파 효과 (테트리스 전용)
+function createShockwave() {
+    let radius = 0;
+    const centerX = canvas.width / 4;
+    const centerY = canvas.height / 4;
+    
+    const animate = () => {
+        if (radius > 200) return;
+        
+        ctx.save();
+        ctx.strokeStyle = `rgba(0, 255, 255, ${1 - radius/200})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        
+        radius += 10;
+        requestAnimationFrame(animate);
+    };
+    
+    animate();
 }
 
 // 점수 팝업 표시
