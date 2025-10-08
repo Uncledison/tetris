@@ -168,8 +168,16 @@ function moveRight() {
 
 // 블록 회전
 function rotatePiece() {
-    if (!game.currentPiece || game.isPaused) return;
+    if (!game.currentPiece || game.isPaused || !game.isRunning) {
+        console.log('회전 불가:', { 
+            hasPiece: !!game.currentPiece, 
+            isPaused: game.isPaused,
+            isRunning: game.isRunning 
+        });
+        return;
+    }
     
+    console.log('블록 회전!');
     game.currentPiece.rotate();
     render();
 }
@@ -187,7 +195,16 @@ function softDrop() {
 
 // 하드 드롭 (즉시 착지)
 function hardDrop() {
-    if (!game.currentPiece || game.isPaused) return;
+    if (!game.currentPiece || game.isPaused || !game.isRunning) {
+        console.log('하드드롭 불가:', { 
+            hasPiece: !!game.currentPiece, 
+            isPaused: game.isPaused,
+            isRunning: game.isRunning 
+        });
+        return;
+    }
+    
+    console.log('하드 드롭!');
     
     let dropDistance = 0;
     while (!game.currentPiece.hasCollision(0, 1)) {
