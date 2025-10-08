@@ -23,7 +23,7 @@ body {
     max-width: 100%;
     width: 100%;
     height: 100vh;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
 }
@@ -31,12 +31,12 @@ body {
 /* 헤더 */
 header {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     flex-shrink: 0;
 }
 
 header h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #00d4ff;
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
     letter-spacing: 5px;
@@ -47,7 +47,7 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
     min-height: 0;
 }
@@ -57,28 +57,28 @@ header h1 {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    max-width: 400px;
-    gap: 10px;
+    max-width: 500px;
+    gap: 8px;
     flex-shrink: 0;
 }
 
 .info-box {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px 15px;
+    border-radius: 8px;
+    padding: 8px 12px;
     text-align: center;
     border: 2px solid rgba(0, 212, 255, 0.3);
     flex: 1;
 }
 
 .info-box h3 {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #00d4ff;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .info-box p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
@@ -86,18 +86,18 @@ header h1 {
 .next-piece {
     text-align: center;
     flex-shrink: 0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .next-piece h3 {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
     color: #00d4ff;
 }
 
 #nextCanvas {
     border: 2px solid rgba(0, 212, 255, 0.5);
-    border-radius: 10px;
+    border-radius: 8px;
     background: #0f0f1e;
     display: block;
     margin: 0 auto;
@@ -112,6 +112,8 @@ header h1 {
     flex: 1;
     min-height: 0;
     width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 #gameCanvas {
@@ -120,10 +122,10 @@ header h1 {
     background: #0f0f1e;
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
     display: block;
-    max-width: 100%;
+    width: 100% !important;
+    height: 100% !important;
     max-height: 100%;
-    height: auto;
-    width: auto;
+    object-fit: contain;
 }
 
 /* 게임 오버 화면 */
@@ -179,23 +181,23 @@ header h1 {
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 10px 0;
+    gap: 6px;
+    padding: 5px 0;
     flex-shrink: 0;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
 }
 
 .control-row {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .control-btn {
-    padding: 18px;
-    font-size: 1.1rem;
+    padding: 20px;
+    font-size: 2rem;
     background: rgba(0, 212, 255, 0.2);
     color: #00d4ff;
     border: 2px solid #00d4ff;
@@ -206,6 +208,9 @@ header h1 {
     max-width: 120px;
     font-weight: bold;
     touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .control-btn.large {
@@ -281,21 +286,21 @@ header h1 {
 /* 모바일 최적화 */
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         letter-spacing: 3px;
     }
 
     .control-btn {
-        padding: 15px;
-        font-size: 1rem;
+        padding: 18px;
+        font-size: 1.8rem;
     }
 
     .info-box {
-        padding: 8px 10px;
+        padding: 6px 8px;
     }
 
     .info-box h3 {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
 
     .info-box p {
@@ -316,57 +321,14 @@ header h1 {
     }
 }
 
-/* 가로 모드 대응 */
-@media (orientation: landscape) and (max-height: 600px) {
-    .container {
-        flex-direction: row;
-        padding: 5px;
-    }
-
-    header {
-        writing-mode: vertical-rl;
-        margin-bottom: 0;
-        margin-right: 10px;
-    }
-
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    .game-wrapper {
-        flex-direction: row;
-        flex: 1;
-    }
-
-    .game-container {
-        order: 2;
-        flex: 0 0 auto;
-    }
-
-    .controls {
-        order: 3;
-        max-width: 200px;
-    }
-
-    .game-info {
-        order: 1;
-        flex-direction: column;
-        max-width: 100px;
-    }
-
-    .next-piece {
-        order: 4;
-    }
-}
-
 /* 아주 작은 화면 */
 @media (max-height: 700px) {
     header {
-        margin-bottom: 5px;
+        margin-bottom: 3px;
     }
 
     header h1 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
     .game-info {
@@ -374,11 +336,23 @@ header h1 {
     }
 
     .controls {
-        gap: 5px;
+        gap: 4px;
     }
 
     .control-btn {
-        padding: 12px;
-        font-size: 0.9rem;
+        padding: 15px;
+        font-size: 1.6rem;
+    }
+
+    .info-box {
+        padding: 5px 8px;
+    }
+
+    .info-box h3 {
+        font-size: 0.6rem;
+    }
+
+    .info-box p {
+        font-size: 1rem;
     }
 }
