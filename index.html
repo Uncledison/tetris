@@ -16,31 +16,33 @@
 
         <!-- 게임 영역 -->
         <div class="game-wrapper">
-            <!-- 상단 정보 - 플로팅 미니카드 -->
-            <div class="floating-info">
-                <!-- 좌측: 점수 -->
-                <div class="mini-card score-mini">
-                    <div class="mini-value" id="score">0</div>
-                    <div class="mini-label">점수</div>
+            <!-- 상단 정보 영역 -->
+            <div class="top-info">
+                <!-- 왼쪽: 점수 -->
+                <div class="score-card">
+                    <div class="score-label">점수</div>
+                    <div class="score-value" id="score">0</div>
+                    <div class="high-score">최고: <span id="highScoreDisplay">0</span></div>
                 </div>
 
-                <!-- 우측: 레벨 & 줄 -->
-                <div class="mini-card stats-mini">
-                    <div class="mini-row">
-                        <span class="mini-value" id="level">1</span>
-                        <span class="mini-label">LV</span>
+                <!-- 중앙: 다음 블록 -->
+                <div class="next-piece-card">
+                    <div class="next-label">다음</div>
+                    <canvas id="nextCanvas" width="60" height="60"></canvas>
+                </div>
+
+                <!-- 오른쪽: 레벨 & 줄 -->
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-label">LV</span>
+                        <span class="stat-value" id="level">1</span>
                     </div>
-                    <div class="mini-divider"></div>
-                    <div class="mini-row">
-                        <span class="mini-value" id="lines">0</span>
-                        <span class="mini-label">줄</span>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-label">줄</span>
+                        <span class="stat-value" id="lines">0</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- 다음 블록 - 게임보드 위 -->
-            <div class="next-block-mini">
-                <canvas id="nextCanvas" width="60" height="60"></canvas>
             </div>
 
             <!-- 중앙: 게임 보드 -->
