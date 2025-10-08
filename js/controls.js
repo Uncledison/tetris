@@ -116,28 +116,38 @@ const controlButtons = {
 };
 
 // 왼쪽 버튼
-controlButtons.left.addEventListener('click', () => {
-    moveLeft();
+controlButtons.left.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('왼쪽 버튼 클릭');
+    if (typeof moveLeft === 'function') moveLeft();
 });
 
 // 오른쪽 버튼
-controlButtons.right.addEventListener('click', () => {
-    moveRight();
+controlButtons.right.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('오른쪽 버튼 클릭');
+    if (typeof moveRight === 'function') moveRight();
 });
 
 // 아래 버튼
-controlButtons.down.addEventListener('click', () => {
-    softDrop();
+controlButtons.down.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('아래 버튼 클릭');
+    if (typeof softDrop === 'function') softDrop();
 });
 
 // 회전 버튼
-controlButtons.rotate.addEventListener('click', () => {
-    rotatePiece();
+controlButtons.rotate.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('회전 버튼 클릭');
+    if (typeof rotatePiece === 'function') rotatePiece();
 });
 
 // 빠른 낙하 버튼
-controlButtons.drop.addEventListener('click', () => {
-    hardDrop();
+controlButtons.drop.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('빠른 낙하 버튼 클릭');
+    if (typeof hardDrop === 'function') hardDrop();
 });
 
 // 버튼 터치 이벤트 (모바일 최적화)
