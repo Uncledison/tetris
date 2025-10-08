@@ -183,6 +183,7 @@ header h1 {
     flex: 1;
     min-height: 0;
     width: 100%;
+    transition: transform 0.05s ease-out;
 }
 
 /* 점수 팝업 */
