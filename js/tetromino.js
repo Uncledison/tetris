@@ -172,13 +172,40 @@ class Piece {
         nextCtx.fillStyle = '#0f0f1e';
         nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
 
-        const offsetX = (4 - this.shape[0].length) / 2;
-        const offsetY = (4 - this.shape.length) / 2;
+        const blockSize = 15; // 50% 크기
+        const offsetX = (nextCanvas.width - (this.shape[0].length * blockSize)) / 2;
+        const offsetY = (nextCanvas.height - (this.shape.length * blockSize)) / 2;
 
         for (let row = 0; row < this.shape.length; row++) {
             for (let col = 0; col < this.shape[row].length; col++) {
                 if (this.shape[row][col]) {
-                    drawBlock(offsetX + col, offsetY + row, this.color, nextCtx);
+                    const x = offsetX + (col * blockSize);
+                    const y = offsetY + (row * blockSize);
+                    
+                    // 블록 그리기
+                    const colors = {
+                        1: '#00f0ff', 2: '#f0f000', 3: '#a000f0',
+                        4: '#00f000', 5: '#f00000', 6: '#0000f0', 7: '#f0a000'
+                    };
+                    const blockColor = colors[this.color] || '#ffffff';
+                    
+                    nextCtx.fillStyle = blockColor;
+                    nextCtx.fillRect(x, y, blockSize, blockSize);
+                    
+                    // 하이라이트
+                    nextCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    nextCtx.fillRect(x, y, blockSize, blockSize * 0.3);
+                    nextCtx.fillRect(x, y, blockSize * 0.3, blockSize);
+                    
+                    // 그림자
+                    nextCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    nextCtx.fillRect(x, y + blockSize * 0.7, blockSize, blockSize * 0.3);
+                    nextCtx.fillRect(x + blockSize * 0.7, y, blockSize * 0.3, blockSize);
+                    
+                    // 테두리
+                    nextCtx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+                    nextCtx.lineWidth = 1;
+                    nextCtx.strokeRect(x, y, blockSize, blockSize);
                 }
             }
         }
