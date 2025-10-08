@@ -140,25 +140,40 @@ function initGame() {
 
 // 게임 시작
 function startGame() {
+    console.log('startGame 함수 호출됨');
+    
     elements.startScreen.classList.add('hidden');
     elements.gameOver.classList.add('hidden');
     
     // 게임 초기화
     initGame();
-    resetBoard();
     
-    // 첫 블록 생성
-    game.currentPiece = getNextPiece();
-    game.nextPiece = getNextPiece();
-    game.nextPiece.drawNext();
+    // 게임 보드 재설정 (board.js의 resetBoard 함수 사용하지 않고 직접)
+    game.board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+    
+    // 첫 블록 생성 (이 부분이 중요!)
+    if (typeof getNextPiece === 'function') {
+        game.currentPiece = getNextPiece();
+        game.nextPiece = getNextPiece();
+        game.nextPiece.drawNext();
+        console.log('블록 생성 완료');
+    } else {
+        console.error('getNextPiece 함수를 찾을 수 없습니다!');
+    }
     
     game.isRunning = true;
     
-    // 게임 루프 시작
-    startGameLoop();
+    // 게임 루프 시작 (board.js의 startGameLoop 함수 확인)
+    if (typeof startGameLoop === 'function') {
+        startGameLoop();
+        console.log('게임 루프 시작');
+    } else {
+        console.error('startGameLoop 함수를 찾을 수 없습니다!');
+    }
+    
     render();
     
-    console.log('게임 시작!');
+    console.log('게임 시작 완료!');
 }
 
 // 게임 오버
@@ -191,9 +206,23 @@ function togglePause() {
 }
 
 // 이벤트 리스너
-elements.startBtn.addEventListener('click', startGame);
-elements.restartBtn.addEventListener('click', startGame);
-elements.pauseBtn.addEventListener('click', togglePause);
+elements.startBtn.addEventListener('click', (e) => {
+    console.log('시작 버튼 클릭됨!');
+    e.preventDefault();
+    startGame();
+});
+
+elements.restartBtn.addEventListener('click', (e) => {
+    console.log('재시작 버튼 클릭됨!');
+    e.preventDefault();
+    startGame();
+});
+
+elements.pauseBtn.addEventListener('click', (e) => {
+    console.log('일시정지 버튼 클릭됨!');
+    e.preventDefault();
+    togglePause();
+});
 
 // 초기화
 initGame();
