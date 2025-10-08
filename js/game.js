@@ -142,12 +142,23 @@ function initGame() {
 function startGame() {
     elements.startScreen.classList.add('hidden');
     elements.gameOver.classList.add('hidden');
+    
+    // 게임 초기화
     initGame();
+    resetBoard();
+    
+    // 첫 블록 생성
+    game.currentPiece = getNextPiece();
+    game.nextPiece = getNextPiece();
+    game.nextPiece.drawNext();
+    
     game.isRunning = true;
     
-    // 여기에 게임 루프가 추가될 예정
+    // 게임 루프 시작
+    startGameLoop();
+    render();
+    
     console.log('게임 시작!');
-    drawBoard();
 }
 
 // 게임 오버
@@ -160,6 +171,8 @@ function gameOver() {
     elements.finalScore.textContent = game.score;
     saveHighScore(game.score);
     elements.gameOver.classList.remove('hidden');
+    
+    console.log('게임 오버! 최종 점수:', game.score);
 }
 
 // 일시정지 토글
@@ -173,6 +186,7 @@ function togglePause() {
         console.log('게임 일시정지');
     } else {
         console.log('게임 재개');
+        render();
     }
 }
 
