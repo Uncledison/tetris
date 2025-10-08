@@ -9,14 +9,9 @@ const ctx = canvas.getContext('2d');
 const nextCanvas = document.getElementById('nextCanvas');
 const nextCtx = nextCanvas.getContext('2d');
 
-// Canvas 크기 설정 (고해상도)
-canvas.width = COLS * BLOCK_SIZE * 2;
-canvas.height = ROWS * BLOCK_SIZE * 2;
-// CSS로 실제 표시 크기 조정
-canvas.style.width = (COLS * BLOCK_SIZE) + 'px';
-canvas.style.height = (ROWS * BLOCK_SIZE) + 'px';
-// 컨텍스트 스케일 조정
-ctx.scale(2, 2);
+// Canvas 크기 설정
+canvas.width = COLS * BLOCK_SIZE;
+canvas.height = ROWS * BLOCK_SIZE;
 
 // 게임 상태
 let game = {
@@ -128,15 +123,14 @@ function drawBlock(x, y, color, context = ctx) {
 // UI 업데이트
 function updateUI() {
     // 점수에 애니메이션 효과
-    const scoreElement = document.getElementById('score');
-    scoreElement.style.transform = 'scale(1.2)';
+    elements.score.style.transform = 'scale(1.1)';
     setTimeout(() => {
-        scoreElement.style.transform = 'scale(1)';
+        elements.score.style.transform = 'scale(1)';
     }, 150);
     
-    scoreElement.textContent = game.score.toLocaleString();
-    document.getElementById('level').textContent = game.level;
-    document.getElementById('lines').textContent = game.lines;
+    elements.score.textContent = game.score.toLocaleString();
+    elements.level.textContent = game.level;
+    elements.lines.textContent = game.lines;
 }
 
 // 게임 초기화
