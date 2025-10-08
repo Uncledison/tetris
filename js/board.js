@@ -149,19 +149,21 @@ function moveDown() {
 
 // 블록 좌우 이동
 function moveLeft() {
-    if (!game.currentPiece || game.isPaused) return;
+    if (!game.currentPiece || game.isPaused || !game.isRunning) return;
     
     if (!game.currentPiece.hasCollision(-1, 0)) {
         game.currentPiece.move(-1, 0);
+        console.log('왼쪽 이동, 현재 x:', game.currentPiece.x);
         render();
     }
 }
 
 function moveRight() {
-    if (!game.currentPiece || game.isPaused) return;
+    if (!game.currentPiece || game.isPaused || !game.isRunning) return;
     
     if (!game.currentPiece.hasCollision(1, 0)) {
         game.currentPiece.move(1, 0);
+        console.log('오른쪽 이동, 현재 x:', game.currentPiece.x);
         render();
     }
 }
