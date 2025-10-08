@@ -61,114 +61,117 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     flex: 1;
     min-height: 0;
+    position: relative;
 }
 
-/* 상단 정보 영역 */
-.top-info {
+/* 플로팅 정보 카드 */
+.floating-info {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    width: 95%;
-    max-width: 500px;
-    gap: 10px;
-    flex-shrink: 0;
+    padding: 0 15px;
+    z-index: 100;
+    pointer-events: none;
 }
 
-/* 점수 카드 (왼쪽) */
-.score-card {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 100, 255, 0.15));
-    border: 2px solid rgba(0, 212, 255, 0.5);
-    border-radius: 12px;
-    padding: 10px 15px;
-    flex: 1;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-}
-
-.score-label {
-    font-size: 0.65rem;
-    color: #00d4ff;
-    margin-bottom: 3px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.score-value {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    line-height: 1;
-    margin-bottom: 3px;
-    transition: transform 0.15s ease-out;
-}
-
-.high-score {
-    font-size: 0.6rem;
-    color: #aaa;
-}
-
-/* 다음 블록 카드 (중앙) */
-.next-piece-card {
-    background: rgba(15, 15, 30, 0.8);
-    border: 2px solid rgba(0, 212, 255, 0.4);
-    border-radius: 12px;
+.mini-card {
+    background: rgba(10, 10, 20, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(0, 212, 255, 0.4);
+    border-radius: 8px;
     padding: 8px 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.score-mini {
     text-align: center;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
 }
 
-.next-label {
-    font-size: 0.6rem;
-    color: #00d4ff;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-#nextCanvas {
-    border-radius: 5px;
-    background: transparent;
-    display: block;
-}
-
-/* 통계 카드 (오른쪽) */
-.stats-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 10px 12px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-}
-
-.stat-label {
-    font-size: 0.6rem;
-    color: #00d4ff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.stat-value {
+.mini-value {
     font-size: 1.4rem;
     font-weight: bold;
     color: #fff;
+    line-height: 1;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+    transition: transform 0.15s ease-out;
+}
+
+.mini-label {
+    font-size: 0.55rem;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.stats-mini {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.mini-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.mini-row .mini-value {
+    font-size: 1.2rem;
+}
+
+.mini-divider {
+    width: 1px;
+    height: 25px;
+    background: rgba(0, 212, 255, 0.3);
+}
+
+/* 다음 블록 미니 */
+.next-block-mini {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+    background: rgba(10, 10, 20, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+#nextCanvas {
+    display: block;
+    border-radius: 4px;
+}
+
+/* 기존 top-info 제거 */
+.top-info {
+    display: none;
+}
+
+.stat-item {
+    display: none;
+}
+
+.stat-label {
+    display: none;
+}
+
+.stat-value {
+    display: none;
 }
 
 .stat-divider {
-    width: 1px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.2);
+    display: none;
 }
 
 /* 게임 컨테이너 */
