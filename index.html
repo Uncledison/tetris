@@ -25,6 +25,12 @@
                     <div class="high-score">최고: <span id="highScoreDisplay">0</span></div>
                 </div>
 
+                <!-- 중앙: 다음 블록 -->
+                <div class="next-piece-card">
+                    <div class="next-label">다음</div>
+                    <canvas id="nextCanvas" width="60" height="60"></canvas>
+                </div>
+
                 <!-- 오른쪽: 레벨 & 줄 -->
                 <div class="stats-card">
                     <div class="stat-item">
@@ -41,13 +47,10 @@
 
             <!-- 중앙: 게임 보드 -->
             <div class="game-container">
-                <!-- 다음 블록 (플로팅) -->
-                <div class="next-piece-floating">
-                    <div class="next-label">다음</div>
-                    <canvas id="nextCanvas" width="80" height="80"></canvas>
-                </div>
-
                 <canvas id="gameCanvas" width="300" height="600"></canvas>
+                
+                <!-- 점수 팝업 컨테이너 -->
+                <div id="scorePopup" class="score-popup"></div>
                 
                 <div id="gameOver" class="game-over hidden">
                     <h2>게임 오버</h2>
