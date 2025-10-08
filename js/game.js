@@ -36,8 +36,7 @@ const elements = {
     highScore: document.getElementById('highScore'),
     startScreen: document.getElementById('startScreen'),
     startBtn: document.getElementById('startBtn'),
-    restartBtn: document.getElementById('restartBtn'),
-    pauseBtn: document.getElementById('pauseBtn')
+    restartBtn: document.getElementById('restartBtn')
 };
 
 // 최고 점수 로드
@@ -195,7 +194,6 @@ function togglePause() {
     if (!game.isRunning) return;
     
     game.isPaused = !game.isPaused;
-    elements.pauseBtn.textContent = game.isPaused ? '▶ 계속' : '⏸ 일시정지';
     
     if (game.isPaused) {
         console.log('게임 일시정지');
@@ -216,12 +214,6 @@ elements.restartBtn.addEventListener('click', (e) => {
     console.log('재시작 버튼 클릭됨!');
     e.preventDefault();
     startGame();
-});
-
-elements.pauseBtn.addEventListener('click', (e) => {
-    console.log('일시정지 버튼 클릭됨!');
-    e.preventDefault();
-    togglePause();
 });
 
 // 초기화
