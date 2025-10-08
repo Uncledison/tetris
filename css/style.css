@@ -70,9 +70,10 @@ header h1 {
 .top-info {
     display: flex;
     justify-content: space-between;
-    width: 92%;
-    max-width: 450px;
-    gap: 15px;
+    align-items: center;
+    width: 95%;
+    max-width: 500px;
+    gap: 10px;
     flex-shrink: 0;
 }
 
@@ -81,32 +82,56 @@ header h1 {
     background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 100, 255, 0.15));
     border: 2px solid rgba(0, 212, 255, 0.5);
     border-radius: 12px;
-    padding: 12px 20px;
+    padding: 10px 15px;
     flex: 1;
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
 }
 
 .score-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: #00d4ff;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .score-value {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: #fff;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     line-height: 1;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     transition: transform 0.15s ease-out;
 }
 
 .high-score {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: #aaa;
+}
+
+/* 다음 블록 카드 (중앙) */
+.next-piece-card {
+    background: rgba(15, 15, 30, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+}
+
+.next-label {
+    font-size: 0.6rem;
+    color: #00d4ff;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#nextCanvas {
+    border-radius: 5px;
+    background: transparent;
+    display: block;
 }
 
 /* 통계 카드 (오른쪽) */
@@ -114,9 +139,9 @@ header h1 {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    padding: 12px 15px;
+    padding: 10px 12px;
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
 }
 
@@ -157,34 +182,43 @@ header h1 {
     width: 100%;
 }
 
-/* 다음 블록 플로팅 */
-.next-piece-floating {
+/* 점수 팝업 */
+.score-popup {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    background: rgba(15, 15, 30, 0.9);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(0, 212, 255, 0.4);
-    border-radius: 10px;
-    padding: 8px 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 60;
 }
 
-.next-label {
-    font-size: 0.65rem;
-    color: #00d4ff;
-    text-align: center;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.popup-text {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffff00;
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8),
+                 0 0 20px rgba(255, 255, 0, 0.5);
+    animation: popupFloat 1s ease-out forwards;
 }
 
-#nextCanvas {
-    border-radius: 5px;
-    background: transparent;
-    display: block;
+@keyframes popupFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.5);
+    }
+}
+
+.combo-text {
+    font-size: 2.5rem;
+    color: #ff00ff;
+    text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+}
+
+/* 다음 블록 플로팅 제거 */
+.next-piece-floating {
+    display: none;
 }
 
 #gameCanvas {
