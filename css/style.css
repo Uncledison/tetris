@@ -9,7 +9,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, #0a0a15 0%, #16213e 100%);
     color: #fff;
     min-height: 100vh;
     display: flex;
@@ -103,6 +103,7 @@ header h1 {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     line-height: 1;
     margin-bottom: 5px;
+    transition: transform 0.15s ease-out;
 }
 
 .high-score {
@@ -315,20 +316,20 @@ header h1 {
 /* 모바일 최적화 */
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.3rem;
-        letter-spacing: 3px;
+        font-size: 1rem;
+        letter-spacing: 6px;
     }
 
-    .info-box {
-        padding: 6px 8px;
+    .score-card, .stats-card {
+        padding: 10px 15px;
     }
 
-    .info-box h3 {
-        font-size: 0.65rem;
+    .score-value {
+        font-size: 1.6rem;
     }
 
-    .info-box p {
-        font-size: 1.1rem;
+    .stat-value {
+        font-size: 1.2rem;
     }
 
     .start-screen h2 {
@@ -348,26 +349,31 @@ header h1 {
 /* 아주 작은 화면 */
 @media (max-height: 700px) {
     header {
-        margin-bottom: 3px;
+        margin-bottom: 5px;
     }
 
     header h1 {
-        font-size: 1.2rem;
+        font-size: 0.9rem;
     }
 
-    .game-info {
-        gap: 5px;
+    .top-info {
+        gap: 10px;
     }
 
-    .info-box {
-        padding: 5px 8px;
+    .score-card, .stats-card {
+        padding: 8px 12px;
     }
 
-    .info-box h3 {
-        font-size: 0.6rem;
+    .score-value {
+        font-size: 1.4rem;
     }
 
-    .info-box p {
-        font-size: 1rem;
+    .stat-value {
+        font-size: 1.1rem;
+    }
+
+    .next-piece-floating {
+        top: 65px;
+        padding: 6px 12px;
     }
 }
