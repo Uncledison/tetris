@@ -67,12 +67,67 @@ function checkLines() {
 
 // 줄 제거 애니메이션
 function animateLinesClear(lines) {
+    // 화면 흔들림 효과
+    if (navigator.vibrate) {
+        navigator.vibrate(100);
+    }
+    
+    // 라인 플래시 효과
     lines.forEach(row => {
         for (let col = 0; col < COLS; col++) {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
         }
     });
+    
+    // 파티클 효과
+    createParticles(lines);
+}
+
+// 파티클 생성
+function createParticles(lines) {
+    lines.forEach(row => {
+        for (let col = 0; col < COLS; col++) {
+            // 각 블록에서 작은 파티클 생성
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const x = col * BLOCK_SIZE + Math.random() * BLOCK_SIZE;
+                    const y = row * BLOCK_SIZE + Math.random() * BLOCK_SIZE;
+                    
+                    ctx.fillStyle = `rgba(255, ${Math.random() * 255}, 0, ${0.8 - i * 0.2})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3 - i, 0, Math.PI * 2);
+                    ctx.fill();
+                }, i * 50);
+            }
+        }
+    });
+}
+
+// 점수 팝업 표시
+function showScorePopup(points, linesCleared) {
+    const popup = document.getElementById('scorePopup');
+    const popupText = document.createElement('div');
+    popupText.className = linesCleared >= 3 ? 'popup-text combo-text' : 'popup-text';
+    
+    let message = '';
+    switch(linesCleared) {
+        case 1: message = `+${points}`; break;
+        case 2: message = `DOUBLE! +${points}`; break;
+        case 3: message = `TRIPLE! +${points}`; break;
+        case 4: message = `TETRIS! +${points}`; break;
+    }
+    
+    popupText.textContent = message;
+    popupText.style.left = '50%';
+    popupText.style.top = '40%';
+    popupText.style.transform = 'translateX(-50%)';
+    
+    popup.appendChild(popupText);
+    
+    setTimeout(() => {
+        popup.removeChild(popupText);
+    }, 1000);
 }
 
 // 줄 제거 및 위 블록 내리기
@@ -109,7 +164,11 @@ function updateScore(linesCleared) {
     }
 
     // 레벨 배수 적용
-    game.score += points * game.level;
+    points *= game.level;
+    game.score += points;
+    
+    // 점수 팝업 표시
+    showScorePopup(points, linesCleared);
 }
 
 // 게임 속도 업데이트
@@ -134,6 +193,11 @@ function moveDown() {
         game.currentPiece.move(0, 1);
         return true;
     } else {
+        // 블록 고정 시 진동
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+        
         // 블록 고정
         game.currentPiece.lock();
         
