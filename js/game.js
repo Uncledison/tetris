@@ -128,14 +128,15 @@ function drawBlock(x, y, color, context = ctx) {
 // UI 업데이트
 function updateUI() {
     // 점수에 애니메이션 효과
-    elements.score.style.transform = 'scale(1.1)';
+    const scoreElement = document.getElementById('score');
+    scoreElement.style.transform = 'scale(1.2)';
     setTimeout(() => {
-        elements.score.style.transform = 'scale(1)';
+        scoreElement.style.transform = 'scale(1)';
     }, 150);
     
-    elements.score.textContent = game.score.toLocaleString();
-    elements.level.textContent = game.level;
-    elements.lines.textContent = game.lines;
+    scoreElement.textContent = game.score.toLocaleString();
+    document.getElementById('level').textContent = game.level;
+    document.getElementById('lines').textContent = game.lines;
 }
 
 // 게임 초기화
