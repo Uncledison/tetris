@@ -172,7 +172,7 @@ class Piece {
         nextCtx.fillStyle = '#0f0f1e';
         nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
 
-        const blockSize = 15; // 50% 크기
+        const blockSize = 12; // 작은 크기
         const offsetX = (nextCanvas.width - (this.shape[0].length * blockSize)) / 2;
         const offsetY = (nextCanvas.height - (this.shape.length * blockSize)) / 2;
 
