@@ -34,6 +34,7 @@ const elements = {
     gameOver: document.getElementById('gameOver'),
     finalScore: document.getElementById('finalScore'),
     highScore: document.getElementById('highScore'),
+    highScoreDisplay: document.getElementById('highScoreDisplay'),
     startScreen: document.getElementById('startScreen'),
     startBtn: document.getElementById('startBtn'),
     restartBtn: document.getElementById('restartBtn')
@@ -43,6 +44,7 @@ const elements = {
 function loadHighScore() {
     const highScore = localStorage.getItem('tetrisHighScore') || 0;
     elements.highScore.textContent = highScore;
+    elements.highScoreDisplay.textContent = highScore;
     return parseInt(highScore);
 }
 
@@ -52,6 +54,7 @@ function saveHighScore(score) {
     if (score > currentHigh) {
         localStorage.setItem('tetrisHighScore', score);
         elements.highScore.textContent = score;
+        elements.highScoreDisplay.textContent = score;
     }
 }
 
@@ -119,7 +122,13 @@ function drawBlock(x, y, color, context = ctx) {
 
 // UI 업데이트
 function updateUI() {
-    elements.score.textContent = game.score;
+    // 점수에 애니메이션 효과
+    elements.score.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        elements.score.style.transform = 'scale(1)';
+    }, 150);
+    
+    elements.score.textContent = game.score.toLocaleString();
     elements.level.textContent = game.level;
     elements.lines.textContent = game.lines;
 }
