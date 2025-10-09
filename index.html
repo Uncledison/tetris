@@ -9,39 +9,47 @@
 </head>
 <body>
     <div class="container">
+        <!-- 헤더 -->
         <header>
             <h1>NEON TETRIS</h1>
         </header>
 
+        <!-- 게임 영역 -->
         <div class="game-wrapper">
+            <!-- 상단 정보 영역 -->
             <div class="top-info">
-                
-                <div class="score-card info-panel">
-                    <div class="high-score">최고: <span id="highScoreDisplay">0</span></div>
+                <!-- 왼쪽: 점수 -->
+                <div class="score-card">
+                    <div class="score-label">점수</div>
                     <div class="score-value" id="score">0</div>
-                    <div class="score-label">SCORE</div>
+                    <div class="high-score">최고: <span id="highScoreDisplay">0</span></div>
                 </div>
 
-                <div class="next-piece-card info-panel">
-                    <div class="next-label">NEXT</div>
-                    <canvas id="nextCanvas" width="120" height="120"></canvas>
+                <!-- 중앙: 다음 블록 -->
+                <div class="next-piece-card">
+                    <div class="next-label">다음</div>
+                    <canvas id="nextCanvas" width="60" height="60"></canvas>
                 </div>
 
-                <div class="stats-card info-panel">
+                <!-- 오른쪽: 레벨 & 줄 -->
+                <div class="stats-card">
                     <div class="stat-item">
-                        <span class="stat-value" id="level">1</span>
                         <span class="stat-label">LV</span>
+                        <span class="stat-value" id="level">1</span>
                     </div>
+                    <div class="stat-divider"></div>
                     <div class="stat-item">
-                        <span class="stat-value" id="lines">0</span>
                         <span class="stat-label">줄</span>
+                        <span class="stat-value" id="lines">0</span>
                     </div>
                 </div>
             </div>
 
+            <!-- 중앙: 게임 보드 -->
             <div class="game-container">
                 <canvas id="gameCanvas" width="300" height="600"></canvas>
                 
+                <!-- 점수 팝업 컨테이너 -->
                 <div id="scorePopup" class="score-popup"></div>
                 
                 <div id="gameOver" class="game-over hidden">
@@ -53,6 +61,7 @@
             </div>
         </div>
 
+        <!-- 게임 시작 화면 -->
         <div class="start-screen" id="startScreen">
             <h2>Neon Tetris</h2>
             <p>스와이프로 블록을 움직이세요</p>
@@ -66,6 +75,7 @@
         </div>
     </div>
 
+    <!-- JavaScript 파일들 (순서 중요!) -->
     <script src="js/game.js"></script>
     <script src="js/tetromino.js"></script>
     <script src="js/board.js"></script>
