@@ -13,8 +13,8 @@ const nextCtx = nextCanvas.getContext('2d');
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
-// 사운드 시스템
-const sounds = {
+// 사운드 시스템 (전역)
+window.sounds = {
     bgm: null,
     currentBgm: 1,
     volume: 0.3,
