@@ -199,7 +199,7 @@ function createMassiveExplosion(lines, linesCount) {
     });
 }
 
-// 개별 파티클 애니메이션 (빠르게 사라짐)
+// 개별 파티클 애니메이션 (빠르게 사라짐) - 수정됨!
 function animateParticle(startX, startY, angle, speed, size, color, maxLife = 25) {
     let x = startX;
     let y = startY;
@@ -218,20 +218,25 @@ function animateParticle(startX, startY, angle, speed, size, color, maxLife = 25
         // 빠르게 페이드 아웃
         const alpha = Math.max(0, life * life); // 제곱으로 더 빠르게
         
+        // 반지름이 음수가 되지 않도록 보정
+        const currentSize = Math.max(0.5, size * life); // 최소 0.5로 제한
+        
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.fillStyle = color;
         
         // 별 모양으로 그리기
         ctx.beginPath();
-        ctx.arc(x, y, size * life, 0, Math.PI * 2);
+        ctx.arc(x, y, currentSize, 0, Math.PI * 2);
         ctx.fill();
         
         // 외곽 글로우 (약하게)
         if (alpha > 0.5) {
             ctx.shadowColor = color;
             ctx.shadowBlur = 8;
-            ctx.arc(x, y, size * life * 0.5, 0, Math.PI * 2);
+            const glowSize = Math.max(0.3, currentSize * 0.5); // 글로우도 최소값 설정
+            ctx.beginPath();
+            ctx.arc(x, y, glowSize, 0, Math.PI * 2);
             ctx.fill();
         }
         
@@ -246,6 +251,8 @@ function animateParticle(startX, startY, angle, speed, size, color, maxLife = 25
 // 화면 흔들림 강화 (더 빠르게)
 function shakeScreen(intensity) {
     const gameContainer = document.querySelector('.game-container');
+    if (!gameContainer) return;
+    
     let shakeCount = 0;
     const maxShakes = intensity > 20 ? 8 : 5; // 횟수 줄임
     
@@ -265,6 +272,7 @@ function shakeScreen(intensity) {
 // 강화된 번개 효과 (10개, 더 두껍게)
 function createEnhancedLightning() {
     const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
     
     // 테두리 번쩍임 강화
     canvas.style.boxShadow = '0 0 80px #00ffff, 0 0 150px #00ffff, 0 0 200px #00ffff';
@@ -302,8 +310,8 @@ function createEnhancedLightning() {
 
 // 3중 충격파
 function createTripleShockwave() {
-    const centerX = canvas.width / 4;
-    const centerY = canvas.height / 4;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
     
     // 3개의 충격파를 시차를 두고 발생
     [0, 100, 200].forEach((delay, index) => {
@@ -339,6 +347,8 @@ function createTripleShockwave() {
 // "TETRIS!" 텍스트 표시
 function showTetrisText() {
     const popup = document.getElementById('scorePopup');
+    if (!popup) return;
+    
     const tetrisText = document.createElement('div');
     tetrisText.style.position = 'absolute';
     tetrisText.style.left = '50%';
@@ -363,6 +373,8 @@ function showTetrisText() {
 // 점수 팝업 표시
 function showScorePopup(points, linesCleared) {
     const popup = document.getElementById('scorePopup');
+    if (!popup) return;
+    
     const popupText = document.createElement('div');
     popupText.className = linesCleared >= 3 ? 'popup-text combo-text' : 'popup-text';
     
@@ -382,7 +394,9 @@ function showScorePopup(points, linesCleared) {
     popup.appendChild(popupText);
     
     setTimeout(() => {
-        popup.removeChild(popupText);
+        if (popup.contains(popupText)) {
+            popup.removeChild(popupText);
+        }
     }, 1000);
 }
 
