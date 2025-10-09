@@ -41,6 +41,7 @@ canvas.addEventListener('touchend', (e) => {
 
     // 탭 (회전)
     if (absX < TAP_THRESHOLD && absY < TAP_THRESHOLD && touchTime < TAP_TIME) {
+        // 🔊 회전 사운드 (board.js의 rotatePiece에서 재생되므로 여기서는 불필요)
         rotatePiece();
         return;
     }
@@ -52,6 +53,7 @@ canvas.addEventListener('touchend', (e) => {
 
     // 가로 스와이프가 더 큰 경우
     if (absX > absY) {
+        // 🔊 이동 사운드 (board.js의 moveLeft/moveRight에서 재생되므로 여기서는 불필요)
         if (deltaX > 0) {
             moveRight();
         } else {
@@ -62,9 +64,15 @@ canvas.addEventListener('touchend', (e) => {
     else {
         if (deltaY > 0) {
             // 아래로 스와이프 - 하드 드롭
+            // 🔊 하드드롭 사운드
+            console.log('하드 드롭 사운드 재생 시도 (controls.js)');
+            if (window.sounds) {
+                window.sounds.play('whoosh'); // 하드드롭 전용 휘릭 소리
+            }
             hardDrop();
         } else {
             // 위로 스와이프 - 회전
+            // 🔊 회전 사운드 (board.js의 rotatePiece에서 재생됨)
             rotatePiece();
         }
     }
@@ -85,6 +93,8 @@ window.addEventListener('resize', () => {
 // 게임이 백그라운드로 가면 자동 일시정지
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && game.isRunning && !game.isPaused) {
+        // 🔊 일시정지 사운드 (선택사항)
+        console.log('게임 백그라운드 일시정지');
         togglePause();
     }
 });
