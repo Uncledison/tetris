@@ -13,6 +13,24 @@ const nextCtx = nextCanvas.getContext('2d');
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
+// 반응형 레이아웃 조정
+function adjustLayout() {
+    const topInfo = document.querySelector('.top-info');
+    const gameControls = document.querySelector('.game-controls');
+    
+    if (topInfo) {
+        topInfo.style.width = canvas.width + 'px';
+    }
+    if (gameControls) {
+        gameControls.style.width = canvas.width + 'px';
+        gameControls.style.justifyContent = 'center';
+    }
+}
+
+// 레이아웃 초기 조정 및 리사이즈 이벤트
+window.addEventListener('DOMContentLoaded', adjustLayout);
+window.addEventListener('resize', adjustLayout);
+
 // 사운드 시스템 (전역)
 window.sounds = {
     bgm: null,
@@ -127,7 +145,9 @@ const elements = {
     highScoreDisplay: document.getElementById('highScoreDisplay'),
     startScreen: document.getElementById('startScreen'),
     startBtn: document.getElementById('startBtn'),
-    restartBtn: document.getElementById('restartBtn')
+    restartBtn: document.getElementById('restartBtn'),
+    pauseBtn: document.getElementById('pauseBtn'),
+    restartGameBtn: document.getElementById('restartGameBtn')
 };
 
 // 최고 점수 로드
@@ -379,12 +399,36 @@ function togglePause() {
         console.log('게임 일시정지');
         // BGM 일시정지
         if (sounds.bgm) sounds.bgm.pause();
+        // 버튼 상태 변경
+        if (elements.pauseBtn) {
+            elements.pauseBtn.textContent = '재개하기';
+            elements.pauseBtn.classList.add('paused');
+        }
     } else {
         console.log('게임 재개');
         // BGM 재개
         if (sounds.bgm) sounds.bgm.play();
+        // 버튼 상태 변경
+        if (elements.pauseBtn) {
+            elements.pauseBtn.textContent = '일시정지';
+            elements.pauseBtn.classList.remove('paused');
+        }
         render();
     }
+}
+
+// 게임 재시작 (게임 중에)
+function restartGame() {
+    console.log('게임 재시작!');
+    // 일시정지 상태 초기화
+    if (game.isPaused) {
+        game.isPaused = false;
+        if (elements.pauseBtn) {
+            elements.pauseBtn.textContent = '일시정지';
+            elements.pauseBtn.classList.remove('paused');
+        }
+    }
+    startGame();
 }
 
 // 이벤트 리스너
@@ -399,6 +443,22 @@ elements.restartBtn.addEventListener('click', (e) => {
     e.preventDefault();
     startGame();
 });
+
+// 일시정지 버튼
+if (elements.pauseBtn) {
+    elements.pauseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        togglePause();
+    });
+}
+
+// 게임 재시작 버튼
+if (elements.restartGameBtn) {
+    elements.restartGameBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        restartGame();
+    });
+}
 
 // 사운드 시스템 초기화
 sounds.init();
