@@ -39,7 +39,12 @@ function checkLines() {
     // 줄 제거 애니메이션 및 처리
     if (linesCleared > 0) {
         // 🔊 라인 클리어 사운드 재생
-        sounds.play('clear');
+        console.log('라인 클리어 사운드 재생 시도, 줄:', linesCleared);
+        if (window.sounds) {
+            window.sounds.play('clear');
+        } else {
+            console.error('sounds 객체를 찾을 수 없습니다!');
+        }
         
         // 애니메이션 효과
         animateLinesClear(linesToClear);
@@ -59,7 +64,12 @@ function checkLines() {
             if (newLevel > game.level) {
                 game.level = newLevel;
                 // 🔊 레벨업 사운드 재생
-                sounds.play('levelUp');
+                console.log('레벨업 사운드 재생 시도');
+                if (window.sounds) {
+                    window.sounds.play('levelUp');
+                } else {
+                    console.error('sounds 객체를 찾을 수 없습니다!');
+                }
                 updateGameSpeed();
             }
             
@@ -76,7 +86,12 @@ function animateLinesClear(lines) {
     
     // 🔊 테트리스 특별 효과음
     if (linesCount === 4) {
-        sounds.play('whoosh'); // 테트리스 전용 추가 사운드
+        console.log('테트리스 특별 사운드 재생 시도');
+        if (window.sounds) {
+            window.sounds.play('whoosh');
+        } else {
+            console.error('sounds 객체를 찾을 수 없습니다!');
+        }
     }
     
     // 진동 강도
@@ -361,7 +376,12 @@ function moveDown() {
         return true;
     } else {
         // 🔊 블록 착지 사운드
-        sounds.play('drop');
+        console.log('착지 사운드 재생 시도');
+        if (window.sounds) {
+            window.sounds.play('drop');
+        } else {
+            console.error('sounds 객체를 찾을 수 없습니다!');
+        }
         
         // 블록 고정 시 진동
         if (navigator.vibrate) {
@@ -387,7 +407,12 @@ function moveLeft() {
     
     if (!game.currentPiece.hasCollision(-1, 0)) {
         // 🔊 이동 사운드
-        sounds.play('move');
+        console.log('이동 사운드 재생 시도');
+        if (window.sounds) {
+            window.sounds.play('move');
+        } else {
+            console.error('sounds 객체를 찾을 수 없습니다!');
+        }
         game.currentPiece.move(-1, 0);
         console.log('왼쪽 이동, 현재 x:', game.currentPiece.x);
         render();
@@ -399,7 +424,12 @@ function moveRight() {
     
     if (!game.currentPiece.hasCollision(1, 0)) {
         // 🔊 이동 사운드
-        sounds.play('move');
+        console.log('이동 사운드 재생 시도');
+        if (window.sounds) {
+            window.sounds.play('move');
+        } else {
+            console.error('sounds 객체를 찾을 수 없습니다!');
+        }
         game.currentPiece.move(1, 0);
         console.log('오른쪽 이동, 현재 x:', game.currentPiece.x);
         render();
@@ -418,7 +448,12 @@ function rotatePiece() {
     }
     
     // 🔊 회전 사운드
-    sounds.play('rotate');
+    console.log('회전 사운드 재생 시도');
+    if (window.sounds) {
+        window.sounds.play('rotate');
+    } else {
+        console.error('sounds 객체를 찾을 수 없습니다!');
+    }
     console.log('블록 회전!');
     game.currentPiece.rotate();
     render();
