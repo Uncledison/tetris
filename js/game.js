@@ -13,6 +13,97 @@ const nextCtx = nextCanvas.getContext('2d');
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
+// 사운드 시스템
+const sounds = {
+    bgm: null,
+    currentBgm: 1,
+    volume: 0.3,
+    sfxVolume: 0.5,
+    
+    // 사운드 파일 로드
+    init() {
+        this.move = new Audio('audio/flip.wav');
+        this.rotate = new Audio('audio/beep.wav');
+        this.drop = new Audio('audio/drop.wav');
+        this.clear = new Audio('audio/success.mp3');
+        this.levelUp = new Audio('audio/level-up.wav');
+        this.gameStart = new Audio('audio/beep.wav');
+        this.whoosh = new Audio('audio/whoosh.wav');
+        
+        // BGM
+        this.bgm1 = new Audio('audio/bgm01.mp3');
+        this.bgm2 = new Audio('audio/bgm02.mp3');
+        
+        // BGM 설정
+        this.bgm1.loop = true;
+        this.bgm2.loop = true;
+        this.bgm1.volume = this.volume;
+        this.bgm2.volume = this.volume;
+        
+        // 효과음 볼륨 설정
+        this.move.volume = this.sfxVolume * 0.3;
+        this.rotate.volume = this.sfxVolume * 0.4;
+        this.drop.volume = this.sfxVolume * 0.6;
+        this.clear.volume = this.sfxVolume * 0.7;
+        this.levelUp.volume = this.sfxVolume * 0.8;
+        this.gameStart.volume = this.sfxVolume * 0.5;
+        this.whoosh.volume = this.sfxVolume * 0.5;
+        
+        console.log('사운드 시스템 초기화 완료');
+    },
+    
+    // 효과음 재생
+    play(soundName) {
+        try {
+            if (this[soundName]) {
+                this[soundName].currentTime = 0;
+                this[soundName].play().catch(e => console.log('사운드 재생 실패:', e));
+            }
+        } catch (e) {
+            console.log('사운드 재생 오류:', e);
+        }
+    },
+    
+    // BGM 시작
+    startBGM() {
+        this.stopBGM();
+        this.bgm = this.currentBgm === 1 ? this.bgm1 : this.bgm2;
+        this.bgm.currentTime = 0;
+        this.bgm.play().catch(e => console.log('BGM 재생 실패:', e));
+    },
+    
+    // BGM 정지
+    stopBGM() {
+        if (this.bgm1) this.bgm1.pause();
+        if (this.bgm2) this.bgm2.pause();
+    },
+    
+    // BGM 전환
+    switchBGM() {
+        this.currentBgm = this.currentBgm === 1 ? 2 : 1;
+        this.startBGM();
+    },
+    
+    // 볼륨 조절
+    setVolume(vol) {
+        this.volume = Math.max(0, Math.min(1, vol));
+        if (this.bgm1) this.bgm1.volume = this.volume;
+        if (this.bgm2) this.bgm2.volume = this.volume;
+    },
+    
+    // 효과음 볼륨 조절
+    setSFXVolume(vol) {
+        this.sfxVolume = Math.max(0, Math.min(1, vol));
+        if (this.move) this.move.volume = this.sfxVolume * 0.3;
+        if (this.rotate) this.rotate.volume = this.sfxVolume * 0.4;
+        if (this.drop) this.drop.volume = this.sfxVolume * 0.6;
+        if (this.clear) this.clear.volume = this.sfxVolume * 0.7;
+        if (this.levelUp) this.levelUp.volume = this.sfxVolume * 0.8;
+        if (this.gameStart) this.gameStart.volume = this.sfxVolume * 0.5;
+        if (this.whoosh) this.whoosh.volume = this.sfxVolume * 0.5;
+    }
+};
+
 // 게임 상태
 let game = {
     score: 0,
@@ -150,16 +241,19 @@ function initGame() {
 function startGame() {
     console.log('startGame 함수 호출됨');
     
+    // 시작 효과음
+    sounds.play('gameStart');
+    
     elements.startScreen.classList.add('hidden');
     elements.gameOver.classList.add('hidden');
     
     // 게임 초기화
     initGame();
     
-    // 게임 보드 재설정 (board.js의 resetBoard 함수 사용하지 않고 직접)
+    // 게임 보드 재설정
     game.board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
     
-    // 첫 블록 생성 (이 부분이 중요!)
+    // 첫 블록 생성
     if (typeof getNextPiece === 'function') {
         game.currentPiece = getNextPiece();
         game.nextPiece = getNextPiece();
@@ -171,7 +265,12 @@ function startGame() {
     
     game.isRunning = true;
     
-    // 게임 루프 시작 (board.js의 startGameLoop 함수 확인)
+    // BGM 시작
+    setTimeout(() => {
+        sounds.startBGM();
+    }, 100);
+    
+    // 게임 루프 시작
     if (typeof startGameLoop === 'function') {
         startGameLoop();
         console.log('게임 루프 시작');
@@ -191,6 +290,9 @@ function gameOver() {
         clearInterval(game.gameLoop);
     }
     
+    // BGM 정지
+    sounds.stopBGM();
+    
     elements.finalScore.textContent = game.score;
     saveHighScore(game.score);
     elements.gameOver.classList.remove('hidden');
@@ -206,8 +308,12 @@ function togglePause() {
     
     if (game.isPaused) {
         console.log('게임 일시정지');
+        // BGM 일시정지
+        if (sounds.bgm) sounds.bgm.pause();
     } else {
         console.log('게임 재개');
+        // BGM 재개
+        if (sounds.bgm) sounds.bgm.play();
         render();
     }
 }
@@ -224,6 +330,9 @@ elements.restartBtn.addEventListener('click', (e) => {
     e.preventDefault();
     startGame();
 });
+
+// 사운드 시스템 초기화
+sounds.init();
 
 // 초기화
 initGame();
