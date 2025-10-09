@@ -121,7 +121,6 @@ let game = {
 const elements = {
     score: document.getElementById('score'),
     level: document.getElementById('level'),
-    lines: document.getElementById('lines'),
     gameOver: document.getElementById('gameOver'),
     finalScore: document.getElementById('finalScore'),
     highScore: document.getElementById('highScore'),
@@ -134,8 +133,8 @@ const elements = {
 // 최고 점수 로드
 function loadHighScore() {
     const highScore = localStorage.getItem('tetrisHighScore') || 0;
-    elements.highScore.textContent = highScore;
-    elements.highScoreDisplay.textContent = highScore;
+    if (elements.highScore) elements.highScore.textContent = highScore;
+    if (elements.highScoreDisplay) elements.highScoreDisplay.textContent = highScore;
     return parseInt(highScore);
 }
 
@@ -144,8 +143,8 @@ function saveHighScore(score) {
     const currentHigh = loadHighScore();
     if (score > currentHigh) {
         localStorage.setItem('tetrisHighScore', score);
-        elements.highScore.textContent = score;
-        elements.highScoreDisplay.textContent = score;
+        if (elements.highScore) elements.highScore.textContent = score;
+        if (elements.highScoreDisplay) elements.highScoreDisplay.textContent = score;
     }
 }
 
@@ -278,17 +277,20 @@ function drawBlock(x, y, color, context = ctx) {
     context.restore();
 }
 
-// UI 업데이트
+// UI 업데이트 - lines 요소 제거
 function updateUI() {
     // 점수에 애니메이션 효과
-    elements.score.style.transform = 'scale(1.1)';
-    setTimeout(() => {
-        elements.score.style.transform = 'scale(1)';
-    }, 150);
+    if (elements.score) {
+        elements.score.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            elements.score.style.transform = 'scale(1)';
+        }, 150);
+        elements.score.textContent = game.score.toLocaleString();
+    }
     
-    elements.score.textContent = game.score.toLocaleString();
-    elements.level.textContent = game.level;
-    elements.lines.textContent = game.lines;
+    if (elements.level) {
+        elements.level.textContent = game.level;
+    }
 }
 
 // 게임 초기화
@@ -360,7 +362,7 @@ function gameOver() {
     // BGM 정지
     sounds.stopBGM();
     
-    elements.finalScore.textContent = game.score;
+    if (elements.finalScore) elements.finalScore.textContent = game.score;
     saveHighScore(game.score);
     elements.gameOver.classList.remove('hidden');
     
