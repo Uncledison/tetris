@@ -94,72 +94,158 @@ function animateLinesClear(lines) {
         }
     }
     
-    // 진동 강도
+    // 💥 진동 강도 대폭 증가
     if (navigator.vibrate) {
         if (linesCount === 4) {
-            navigator.vibrate([50, 30, 50, 30, 100]); // 테트리스: 강력한 진동
+            navigator.vibrate([100, 50, 100, 50, 150]); // 테트리스: 더 강력한 진동
         } else if (linesCount >= 3) {
-            navigator.vibrate([50, 20, 80]); // 트리플
+            navigator.vibrate([80, 40, 120]); // 트리플
         } else if (linesCount === 2) {
-            navigator.vibrate([40, 20, 60]); // 더블
+            navigator.vibrate([60, 30, 90]); // 더블
         } else {
-            navigator.vibrate(50); // 싱글
+            navigator.vibrate(70); // 싱글
         }
     }
     
-    // 화면 흔들림 효과
-    if (linesCount >= 3) {
-        shakeScreen(linesCount === 4 ? 10 : 6);
+    // 💥 화면 흔들림 효과 - 3배 강화!
+    const shakeIntensity = linesCount === 4 ? 30 : linesCount === 3 ? 20 : linesCount === 2 ? 10 : 5;
+    shakeScreen(shakeIntensity);
+    
+    // 1단계: 화면 전체 플래시 (테트리스는 화면 전체)
+    if (linesCount === 4) {
+        // 화면 전체 하얗게 번쩍!
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     
-    // 1단계: 라인 밝게 빛나기 (50ms)
+    // 라인 밝게 빛나기
     lines.forEach(row => {
         for (let col = 0; col < COLS; col++) {
-            ctx.fillStyle = linesCount === 4 ? '#ffffff' : '#ffff00';
+            // 색상 강화
+            if (linesCount === 4) {
+                ctx.fillStyle = '#ffffff'; // 테트리스: 순백
+            } else if (linesCount === 3) {
+                ctx.fillStyle = '#ff0066'; // 트리플: 핫핑크
+            } else if (linesCount === 2) {
+                ctx.fillStyle = '#ff9900'; // 더블: 오렌지
+            } else {
+                ctx.fillStyle = '#ffff00'; // 싱글: 노랑
+            }
             ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             
-            // 외곽 글로우
+            // 외곽 글로우 강화
             ctx.shadowColor = linesCount === 4 ? '#00ffff' : '#ffaa00';
-            ctx.shadowBlur = 20;
+            ctx.shadowBlur = linesCount === 4 ? 30 : 20; // 더 강하게
             ctx.strokeStyle = ctx.shadowColor;
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 4; // 더 두껍게
             ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             ctx.shadowBlur = 0;
         }
     });
     
-    // 2단계: 크랙 효과 (100ms 후)
+    // 2단계: 크랙 효과 (10ms 후 - 5배 빠르게!)
     setTimeout(() => {
         lines.forEach(row => {
-            // 가운데부터 양쪽으로 크랙
             for (let col = 0; col < COLS; col++) {
                 const distance = Math.abs(col - COLS/2);
                 setTimeout(() => {
-                    ctx.fillStyle = 'rgba(255, 100, 0, 0.8)';
+                    ctx.fillStyle = linesCount === 4 ? 'rgba(0, 255, 255, 0.9)' : 'rgba(255, 100, 0, 0.8)';
                     ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-                }, distance * 10);
+                }, distance * 5); // 2배 빠르게
             }
         });
-    }, 50);
+    }, 10); // 5배 빠르게!
     
-    // 3단계: 폭발 파티클 (150ms 후)
+    // 3단계: 대폭발 파티클 (20ms 후 - 7배 빠르게!)
     setTimeout(() => {
-        createExplosionParticles(lines, linesCount);
-    }, 100);
+        createMassiveExplosion(lines, linesCount);
+    }, 20); // 5배 빠르게!
     
     // 테트리스 전용 효과
     if (linesCount === 4) {
-        createLightningEffect();
-        createShockwave();
+        createEnhancedLightning();
+        createTripleShockwave();
+        
+        // "TETRIS!" 텍스트
+        showTetrisText();
     }
 }
 
-// 화면 흔들림
+// 💥 대폭발 파티클 생성 (6배 증가!)
+function createMassiveExplosion(lines, linesCount) {
+    // 파티클 수 대폭 증가!
+    const particleCount = linesCount === 4 ? 300 : linesCount === 3 ? 150 : linesCount === 2 ? 100 : 50;
+    
+    const colors = linesCount === 4 
+        ? ['#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#4400ff', '#ff00ff'] // 무지개 7색
+        : linesCount >= 3
+        ? ['#ff00ff', '#ff0099', '#ff00cc', '#ff3366'] // 핑크 계열
+        : linesCount === 2
+        ? ['#ff7700', '#ff0000', '#ff4400'] // 주황/빨강
+        : ['#ffff00', '#ffaa00', '#ffcc00']; // 노랑
+    
+    lines.forEach(row => {
+        for (let i = 0; i < particleCount / lines.length; i++) {
+            const col = Math.random() * COLS;
+            const x = col * BLOCK_SIZE;
+            const y = row * BLOCK_SIZE;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 5 + Math.random() * 10; // 3배 빠르게!
+            const size = 3 + Math.random() * 5; // 더 크게!
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            animateParticle(x, y, angle, speed, size, color, 60); // 2배 오래!
+        }
+    });
+}
+
+// 개별 파티클 애니메이션 (수명 조절 가능)
+function animateParticle(startX, startY, angle, speed, size, color, maxLife = 30) {
+    let x = startX;
+    let y = startY;
+    let life = 1.0;
+    let frame = 0;
+    const fadeSpeed = 1.0 / maxLife;
+    
+    const animate = () => {
+        if (life <= 0 || frame > maxLife) return;
+        
+        x += Math.cos(angle) * speed;
+        y += Math.sin(angle) * speed;
+        life -= fadeSpeed;
+        frame++;
+        
+        ctx.save();
+        ctx.globalAlpha = life;
+        ctx.fillStyle = color;
+        
+        // 별 모양으로 그리기 (더 화려하게)
+        ctx.beginPath();
+        ctx.arc(x, y, size * life, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 외곽 글로우
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10;
+        ctx.arc(x, y, size * life * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.restore();
+        
+        requestAnimationFrame(animate);
+    };
+    
+    animate();
+}
+
+// 화면 흔들림 강화
 function shakeScreen(intensity) {
     const gameContainer = document.querySelector('.game-container');
     let shakeCount = 0;
+    const maxShakes = intensity > 20 ? 10 : 6; // 강할수록 더 오래
+    
     const shakeInterval = setInterval(() => {
-        if (shakeCount >= 6) {
+        if (shakeCount >= maxShakes) {
             clearInterval(shakeInterval);
             gameContainer.style.transform = 'translate(0, 0)';
             return;
@@ -168,122 +254,105 @@ function shakeScreen(intensity) {
         const y = (Math.random() - 0.5) * intensity;
         gameContainer.style.transform = `translate(${x}px, ${y}px)`;
         shakeCount++;
-    }, 50);
+    }, 30); // 더 빠르게
 }
 
-// 강화된 파티클 생성
-function createExplosionParticles(lines, linesCount) {
-    const particleCount = linesCount === 4 ? 50 : linesCount * 15;
-    const colors = linesCount === 4 
-        ? ['#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#ff00ff'] // 무지개
-        : linesCount >= 3
-        ? ['#ff00ff', '#ff0099', '#ff00cc'] // 핑크
-        : linesCount === 2
-        ? ['#ff7700', '#ff0000'] // 주황/빨강
-        : ['#ffff00', '#ffaa00']; // 노랑
-    
-    lines.forEach(row => {
-        for (let i = 0; i < particleCount / lines.length; i++) {
-            const col = Math.random() * COLS;
-            const x = col * BLOCK_SIZE;
-            const y = row * BLOCK_SIZE;
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 2 + Math.random() * 4;
-            const size = 2 + Math.random() * 4;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            animateParticle(x, y, angle, speed, size, color);
-        }
-    });
-}
-
-// 개별 파티클 애니메이션
-function animateParticle(startX, startY, angle, speed, size, color) {
-    let x = startX;
-    let y = startY;
-    let life = 1.0;
-    let frame = 0;
-    
-    const animate = () => {
-        if (life <= 0 || frame > 30) return;
-        
-        x += Math.cos(angle) * speed;
-        y += Math.sin(angle) * speed;
-        life -= 0.05;
-        frame++;
-        
-        ctx.save();
-        ctx.globalAlpha = life;
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, size * life, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-        
-        requestAnimationFrame(animate);
-    };
-    
-    animate();
-}
-
-// 번개 효과 (테트리스 전용)
-function createLightningEffect() {
+// 강화된 번개 효과 (10개, 더 두껍게)
+function createEnhancedLightning() {
     const canvas = document.getElementById('gameCanvas');
-    const rect = canvas.getBoundingClientRect();
     
-    // 테두리 번쩍임
-    canvas.style.boxShadow = '0 0 50px #00ffff, 0 0 100px #00ffff';
+    // 테두리 번쩍임 강화
+    canvas.style.boxShadow = '0 0 80px #00ffff, 0 0 150px #00ffff, 0 0 200px #00ffff';
     setTimeout(() => {
         canvas.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)';
-    }, 200);
+    }, 300);
     
-    // 번개 선 그리기
+    // 번개 선 그리기 (10개!)
     ctx.save();
-    ctx.strokeStyle = '#00ffff';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 20;
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         setTimeout(() => {
+            ctx.strokeStyle = i % 2 === 0 ? '#00ffff' : '#ffffff';
+            ctx.lineWidth = 5; // 더 두껍게
+            ctx.shadowColor = '#00ffff';
+            ctx.shadowBlur = 30;
+            
             ctx.beginPath();
-            ctx.moveTo(Math.random() * canvas.width, 0);
-            const segments = 5;
+            let startX = Math.random() * canvas.width;
+            ctx.moveTo(startX, 0);
+            
+            const segments = 8; // 더 많은 세그먼트
             for (let s = 0; s < segments; s++) {
-                ctx.lineTo(
-                    Math.random() * canvas.width,
-                    (canvas.height / segments) * (s + 1)
-                );
+                const nextX = startX + (Math.random() - 0.5) * 60;
+                const nextY = (canvas.height / segments) * (s + 1);
+                ctx.lineTo(nextX, nextY);
+                startX = nextX;
             }
             ctx.stroke();
-        }, i * 50);
+        }, i * 30);
     }
     
     ctx.restore();
 }
 
-// 충격파 효과 (테트리스 전용)
-function createShockwave() {
-    let radius = 0;
+// 3중 충격파
+function createTripleShockwave() {
     const centerX = canvas.width / 4;
     const centerY = canvas.height / 4;
     
-    const animate = () => {
-        if (radius > 200) return;
-        
-        ctx.save();
-        ctx.strokeStyle = `rgba(0, 255, 255, ${1 - radius/200})`;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-        
-        radius += 10;
-        requestAnimationFrame(animate);
-    };
+    // 3개의 충격파를 시차를 두고 발생
+    [0, 100, 200].forEach((delay, index) => {
+        setTimeout(() => {
+            let radius = 0;
+            const maxRadius = 250;
+            const colors = ['#00ffff', '#ffffff', '#00ffff'];
+            
+            const animate = () => {
+                if (radius > maxRadius) return;
+                
+                ctx.save();
+                ctx.strokeStyle = colors[index % colors.length];
+                ctx.lineWidth = 4;
+                ctx.globalAlpha = 1 - (radius / maxRadius);
+                ctx.shadowColor = colors[index % colors.length];
+                ctx.shadowBlur = 20;
+                
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+                
+                radius += 15; // 더 빠르게
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
+        }, delay);
+    });
+}
+
+// "TETRIS!" 텍스트 표시
+function showTetrisText() {
+    const popup = document.getElementById('scorePopup');
+    const tetrisText = document.createElement('div');
+    tetrisText.style.position = 'absolute';
+    tetrisText.style.left = '50%';
+    tetrisText.style.top = '30%';
+    tetrisText.style.transform = 'translateX(-50%)';
+    tetrisText.style.fontSize = '4rem';
+    tetrisText.style.fontWeight = 'bold';
+    tetrisText.style.color = '#00ffff';
+    tetrisText.style.textShadow = '0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff';
+    tetrisText.style.animation = 'tetrisPop 1s ease-out';
+    tetrisText.textContent = 'TETRIS!';
     
-    animate();
+    popup.appendChild(tetrisText);
+    
+    setTimeout(() => {
+        if (popup.contains(tetrisText)) {
+            popup.removeChild(tetrisText);
+        }
+    }, 1000);
 }
 
 // 점수 팝업 표시
