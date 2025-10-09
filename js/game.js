@@ -176,7 +176,7 @@ function drawBoard() {
     }
 }
 
-// 블록 그리기
+// 블록 그리기 - 크리스탈 큐브 스타일 💎
 function drawBlock(x, y, color, context = ctx) {
     const colors = {
         1: '#00f0ff', // I - 시안
@@ -190,25 +190,92 @@ function drawBlock(x, y, color, context = ctx) {
 
     const blockColor = colors[color] || '#ffffff';
     const size = BLOCK_SIZE;
+    const px = x * size;
+    const py = y * size;
 
-    // 블록 본체
-    context.fillStyle = blockColor;
-    context.fillRect(x * size, y * size, size, size);
+    // 💎 외곽 크리스탈 글로우 (반투명)
+    context.save();
+    const gradient1 = context.createRadialGradient(
+        px + size * 0.3, py + size * 0.3, 0,
+        px + size * 0.5, py + size * 0.5, size * 0.7
+    );
+    gradient1.addColorStop(0, blockColor + '60');
+    gradient1.addColorStop(1, 'transparent');
+    context.fillStyle = gradient1;
+    context.fillRect(px - 2, py - 2, size + 4, size + 4);
+    context.restore();
 
-    // 하이라이트 (3D 효과)
+    // 💎 메인 크리스탈 본체 (그라데이션)
+    context.save();
+    const gradient2 = context.createLinearGradient(px, py, px + size, py + size);
+    gradient2.addColorStop(0, blockColor + 'ee');
+    gradient2.addColorStop(0.5, blockColor + 'aa');
+    gradient2.addColorStop(1, blockColor + 'ee');
+    context.fillStyle = gradient2;
+    context.fillRect(px, py, size, size);
+    context.restore();
+
+    // 💎 크리스탈 하이라이트 (왼쪽 상단)
+    context.save();
+    const highlight = context.createRadialGradient(
+        px + size * 0.3, py + size * 0.3, 0,
+        px + size * 0.3, py + size * 0.3, size * 0.4
+    );
+    highlight.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+    highlight.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    context.fillStyle = highlight;
+    context.fillRect(px, py, size * 0.6, size * 0.6);
+    context.restore();
+
+    // 💎 크리스탈 패싯 (상단)
+    context.save();
     context.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    context.fillRect(x * size, y * size, size, size * 0.3);
-    context.fillRect(x * size, y * size, size * 0.3, size);
+    context.fillRect(px, py, size, size * 0.35);
+    context.restore();
 
-    // 그림자
+    // 💎 크리스탈 패싯 (하단 그림자)
+    context.save();
     context.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    context.fillRect(x * size, y * size + size * 0.7, size, size * 0.3);
-    context.fillRect(x * size + size * 0.7, y * size, size * 0.3, size);
+    context.fillRect(px, py + size * 0.65, size, size * 0.35);
+    context.restore();
 
-    // 테두리
-    context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+    // 💎 크리스탈 테두리 (강조)
+    context.save();
+    context.strokeStyle = blockColor;
     context.lineWidth = 2;
-    context.strokeRect(x * size, y * size, size, size);
+    context.shadowColor = blockColor;
+    context.shadowBlur = 8;
+    context.strokeRect(px + 1, py + 1, size - 2, size - 2);
+    context.restore();
+
+    // 💎 반짝이는 별 파티클 (랜덤 위치)
+    context.save();
+    const sparkleTime = Date.now() / 1000;
+    for (let i = 0; i < 3; i++) {
+        const sparkleX = px + size * (0.2 + i * 0.3);
+        const sparkleY = py + size * (0.3 + i * 0.25);
+        const opacity = Math.abs(Math.sin(sparkleTime * 3 + i * 2));
+        
+        if (opacity > 0.5) {
+            context.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            context.shadowColor = '#ffffff';
+            context.shadowBlur = 4;
+            
+            // 작은 십자 반짝임
+            context.fillRect(sparkleX - 1, sparkleY - 3, 2, 6);
+            context.fillRect(sparkleX - 3, sparkleY - 1, 6, 2);
+        }
+    }
+    context.restore();
+
+    // 💎 외곽 크리스탈 광채
+    context.save();
+    context.strokeStyle = blockColor + '80';
+    context.lineWidth = 1;
+    context.shadowColor = blockColor;
+    context.shadowBlur = 5;
+    context.strokeRect(px, py, size, size);
+    context.restore();
 }
 
 // UI 업데이트
