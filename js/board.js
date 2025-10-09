@@ -194,18 +194,18 @@ function createMassiveExplosion(lines, linesCount) {
             const size = 3 + Math.random() * 5; // 더 크게!
             const color = colors[Math.floor(Math.random() * colors.length)];
             
-            animateParticle(x, y, angle, speed, size, color, 60); // 2배 오래!
+            animateParticle(x, y, angle, speed, size, color, 25); // 짧게! 25프레임
         }
     });
 }
 
-// 개별 파티클 애니메이션 (수명 조절 가능)
-function animateParticle(startX, startY, angle, speed, size, color, maxLife = 30) {
+// 개별 파티클 애니메이션 (빠르게 사라짐)
+function animateParticle(startX, startY, angle, speed, size, color, maxLife = 25) {
     let x = startX;
     let y = startY;
     let life = 1.0;
     let frame = 0;
-    const fadeSpeed = 1.0 / maxLife;
+    const fadeSpeed = 1.2 / maxLife; // 더 빠르게 페이드
     
     const animate = () => {
         if (life <= 0 || frame > maxLife) return;
@@ -215,20 +215,25 @@ function animateParticle(startX, startY, angle, speed, size, color, maxLife = 30
         life -= fadeSpeed;
         frame++;
         
+        // 빠르게 페이드 아웃
+        const alpha = Math.max(0, life * life); // 제곱으로 더 빠르게
+        
         ctx.save();
-        ctx.globalAlpha = life;
+        ctx.globalAlpha = alpha;
         ctx.fillStyle = color;
         
-        // 별 모양으로 그리기 (더 화려하게)
+        // 별 모양으로 그리기
         ctx.beginPath();
         ctx.arc(x, y, size * life, 0, Math.PI * 2);
         ctx.fill();
         
-        // 외곽 글로우
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 10;
-        ctx.arc(x, y, size * life * 0.5, 0, Math.PI * 2);
-        ctx.fill();
+        // 외곽 글로우 (약하게)
+        if (alpha > 0.5) {
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 8;
+            ctx.arc(x, y, size * life * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         ctx.restore();
         
@@ -238,11 +243,11 @@ function animateParticle(startX, startY, angle, speed, size, color, maxLife = 30
     animate();
 }
 
-// 화면 흔들림 강화
+// 화면 흔들림 강화 (더 빠르게)
 function shakeScreen(intensity) {
     const gameContainer = document.querySelector('.game-container');
     let shakeCount = 0;
-    const maxShakes = intensity > 20 ? 10 : 6; // 강할수록 더 오래
+    const maxShakes = intensity > 20 ? 8 : 5; // 횟수 줄임
     
     const shakeInterval = setInterval(() => {
         if (shakeCount >= maxShakes) {
@@ -254,7 +259,7 @@ function shakeScreen(intensity) {
         const y = (Math.random() - 0.5) * intensity;
         gameContainer.style.transform = `translate(${x}px, ${y}px)`;
         shakeCount++;
-    }, 30); // 더 빠르게
+    }, 20); // 더 빠르게 (30ms → 20ms)
 }
 
 // 강화된 번개 효과 (10개, 더 두껍게)
