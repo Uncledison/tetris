@@ -38,6 +38,9 @@ function checkLines() {
 
     // 줄 제거 애니메이션 및 처리
     if (linesCleared > 0) {
+        // 🔊 라인 클리어 사운드 재생
+        sounds.play('clear');
+        
         // 애니메이션 효과
         animateLinesClear(linesToClear);
         
@@ -55,6 +58,8 @@ function checkLines() {
             const newLevel = Math.floor(game.lines / 10) + 1;
             if (newLevel > game.level) {
                 game.level = newLevel;
+                // 🔊 레벨업 사운드 재생
+                sounds.play('levelUp');
                 updateGameSpeed();
             }
             
@@ -68,6 +73,11 @@ function checkLines() {
 // 줄 제거 애니메이션
 function animateLinesClear(lines) {
     const linesCount = lines.length;
+    
+    // 🔊 테트리스 특별 효과음
+    if (linesCount === 4) {
+        sounds.play('whoosh'); // 테트리스 전용 추가 사운드
+    }
     
     // 진동 강도
     if (navigator.vibrate) {
@@ -350,6 +360,9 @@ function moveDown() {
         game.currentPiece.move(0, 1);
         return true;
     } else {
+        // 🔊 블록 착지 사운드
+        sounds.play('drop');
+        
         // 블록 고정 시 진동
         if (navigator.vibrate) {
             navigator.vibrate(50);
@@ -373,6 +386,8 @@ function moveLeft() {
     if (!game.currentPiece || game.isPaused || !game.isRunning) return;
     
     if (!game.currentPiece.hasCollision(-1, 0)) {
+        // 🔊 이동 사운드
+        sounds.play('move');
         game.currentPiece.move(-1, 0);
         console.log('왼쪽 이동, 현재 x:', game.currentPiece.x);
         render();
@@ -383,6 +398,8 @@ function moveRight() {
     if (!game.currentPiece || game.isPaused || !game.isRunning) return;
     
     if (!game.currentPiece.hasCollision(1, 0)) {
+        // 🔊 이동 사운드
+        sounds.play('move');
         game.currentPiece.move(1, 0);
         console.log('오른쪽 이동, 현재 x:', game.currentPiece.x);
         render();
@@ -400,6 +417,8 @@ function rotatePiece() {
         return;
     }
     
+    // 🔊 회전 사운드
+    sounds.play('rotate');
     console.log('블록 회전!');
     game.currentPiece.rotate();
     render();
@@ -436,6 +455,8 @@ function hardDrop() {
     }
     
     game.score += POINTS.HARD_DROP * dropDistance;
+    
+    // 🔊 하드 드롭 사운드 (drop 사운드는 착지 시 자동 재생됨)
     
     // 블록 고정
     game.currentPiece.lock();
