@@ -211,6 +211,21 @@ header h1 {
     }
 }
 
+@keyframes tetrisPop {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
 .combo-text {
     font-size: 2.5rem;
     color: #ff00ff;
